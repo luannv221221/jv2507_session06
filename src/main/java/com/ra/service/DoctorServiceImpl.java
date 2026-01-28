@@ -3,6 +3,8 @@ package com.ra.service;
 import com.ra.model.entity.Doctor;
 import com.ra.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,5 +34,26 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public void deleteDoctorById(Long id) {
         doctorRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Doctor> findAllDoctorsPagination(Pageable pageable) {
+        Page<Doctor> doctors = doctorRepository.findAll(pageable);
+        return doctors;
+    }
+
+    @Override
+    public Page<Doctor> searchDoctorsPagination(String keyword, Pageable pageable) {
+        return doctorRepository.findByFullNameContainingIgnoreCase(keyword,pageable);
+    }
+
+    @Override
+    public List<Doctor> getDoctorsByEx() {
+        return doctorRepository.findTop10DoctorsByExperienceYears();
+    }
+
+    @Override
+    public List<Doctor> getDoctorsByEx1() {
+        return doctorRepository.findTop5DoctorsByExperienceYears();
     }
 }
